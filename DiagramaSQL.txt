@@ -1,0 +1,67 @@
+*** Diagrama de clases *** 
+
++----------------------------------------+
+| - Nombre: String                       |
+| - Apellidos: String                    |
+| - Dni: String                          |
+| - Sexo: Char                           |
+| - idUsuario: String                    |
+| - Contraseña: String                   |
+| - Email: String                        |
+| - Teléfono: String                     |
+| - FechaNacimiento: Date                |
+| + asignarRol(rol: Rol): void           |
+| + quitarRol(rol: Rol): void            |
+| + obtenerRoles(): List<Rol>            |
++----------------------------------------+
+                   ^
+                   |
++------------------|---------------------+
+|                  |                     |
+|                  |                     |
+|                  |                     |
+v                  v                     v
++--------------------------+   +------------------------+
+|            Rol           |   |        SuperUser       |
++--------------------------+   +------------------------+
+| - Nombre: String         |   | - SuperUser: boolean   |
+| + getNombre(): String    |   +------------------------+
++--------------------------+
+
+*** Sintaxis para crear tablas en MySQL *** 
+
+
+-- Tabla para almacenar la información de Usuario
+CREATE TABLE Usuario (
+    idUsuario INTEGER AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(255) NOT NULL,
+    Apellidos VARCHAR(255) NOT NULL,
+    Dni VARCHAR(20) NOT NULL,
+    Sexo CHAR(1),
+    Contraseña VARCHAR(255) NOT NULL,
+    Email VARCHAR(255) UNIQUE NOT NULL,
+    Teléfono INTEGER,
+    FechaNacimiento DATE,
+);
+
+-- Tabla para almacenar la información de Rol
+CREATE TABLE Rol (
+    idRol int auto_increment PRIMARY KEY,
+    Nombre VARCHAR(50) NOT NULL
+);
+
+-- Tabla de relación para manejar la asociación muchos a muchos entre Usuario y Rol
+CREATE TABLE Usuario_Rol (
+    idUsuario INTEGER,
+    idRol INTEGER,
+    PRIMARY KEY (idUsuario, idRol),
+    FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario),
+    FOREIGN KEY (idRol) REFERENCES Rol(idRol)
+);
+
+-- Tabla para almacenar la información de SuperUser, que hereda de Usuario
+CREATE TABLE SuperUser (
+    idUsuario INT PRIMARY KEY,
+    SuperUser BOOLEAN NOT NULL,
+    FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario)
+);
